@@ -2,8 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexp/const/const.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:lottie/lottie.dart';
 
 class Sscreen extends StatefulWidget {
   const Sscreen({super.key});
@@ -151,13 +150,12 @@ class _SscreenState extends State<Sscreen> {
                                 //   h * 0.14,
                                 //   w * 0.7,
                                 // ),
-                                // errorWidget:
-                                //     (context, url, error) =>
-                                //         Lottie.asset(
-                                //   'assets/noimg.json',
-                                //   width: w * 0.8,
-                                //   height: h * 0.15,
-                                // ),
+                                errorWidget: (context, url, error) =>
+                                    Lottie.asset(
+                                  'assets/noimg.json',
+                                  width: 100,
+                                  height: 100,
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 8),

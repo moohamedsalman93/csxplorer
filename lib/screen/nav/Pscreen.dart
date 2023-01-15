@@ -1,7 +1,6 @@
+import 'package:csexp/const/auth.dart';
 import 'package:csexp/const/const.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class Pscreen extends StatefulWidget {
   const Pscreen({super.key});
@@ -35,7 +34,27 @@ class _PscreenState extends State<Pscreen> {
                   color: wh,
                   fontFamily: 'Montserrat',
                   fontSize: 20)),
-          
+          Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10), color: y),
+              child: Material(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent,
+                  child: InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      splashColor: b,
+                      onTap: () {
+                        Auth a = Auth();
+                        a.signOut();
+                      },
+                      child: Ink(
+                          height: 38,
+                          width: 176,
+                          child: const Center(
+                              child: Text(
+                            "Login",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          )))))),
         ],
       ),
     );

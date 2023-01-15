@@ -1,12 +1,9 @@
-import 'dart:ffi';
-import 'dart:ui';
-
+import 'package:csexp/const/auth.dart';
 import 'package:csexp/const/const.dart';
 import 'package:csexp/const/shimmer.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -54,6 +51,8 @@ class _HscreenState extends State<Hscreen> {
   int current = 0;
   int i = 0;
   List<String> temp = [];
+
+  Auth a = Auth();
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +205,7 @@ class _HscreenState extends State<Hscreen> {
       );
 
   Widget Certificate() => StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('certificate').snapshots(),
+      stream: FirebaseFirestore.instance.collection('all').snapshots(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -550,33 +549,34 @@ class _HscreenState extends State<Hscreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  CachedNetworkImage(
-                                    imageUrl: x["img"],
-                                    imageBuilder: (context, imageProvider) =>
-                                        Container(
-                                      height: 124,
-                                      width: 154,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                            color: wh.withOpacity(0.3),
-                                            width: 1),
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                        ),
-                                      ),
-                                    ),
-                                    placeholder: (context, url) => mainimg(
-                                      124.0,
-                                      154.0,
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Lottie.asset(
-                                      'assets/noimg.json',
-                                      height: 124,
-                                      width: 154,
-                                    ),
-                                  ),
+                                  // CachedNetworkImage(
+                                  //   imageUrl: x["img"],
+                                  //   imageBuilder: (ctx, imageProvider) =>
+                                  //       Container(
+                                  //     height: 124,
+                                  //     width: 154,
+                                  //     decoration: BoxDecoration(
+                                  //       borderRadius: BorderRadius.circular(20),
+                                  //       border: Border.all(
+                                  //           color: wh.withOpacity(0.3),
+                                  //           width: 1),
+                                  //       image: DecorationImage(
+                                  //         image: imageProvider,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  //   placeholder: (context, url) => mainimg(
+                                  //     124.0,
+                                  //     154.0,
+                                  //   ),
+                                  //   errorWidget: (context, url, error) =>
+                                  //       Lottie.asset(
+                                  //     'assets/noimg.json',
+                                  //     height: 124,
+                                  //     width: 154,
+                                  //   ),
+                                  // ),
+
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8),
                                     child: Text(x['title'],
@@ -587,47 +587,51 @@ class _HscreenState extends State<Hscreen> {
                                           color: Colors.white,
                                         )),
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          mys(() {});
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            mys(() {});
 
-                                          if (temp.contains(x['title'])) {
-                                            temp.remove(x['title']);
-                                          } else {
-                                            temp.add(x['title']);
-                                          }
-                                          print(temp);
-                                        },
-                                        child: Icon(
-                                          temp.contains(x['title'])
-                                              ? Icons.favorite
-                                              : Icons.favorite_border_rounded,
-                                          color: temp.contains(x['title'])
-                                              ? Colors.red
-                                              : wh,
+                                            if (temp.contains(x['title'])) {
+                                              temp.remove(x['title']);
+                                            } else {
+                                              temp.add(x['title']);
+                                            }
+                                            print(temp);
+                                          },
+                                          child: Icon(
+                                            temp.contains(x['title'])
+                                                ? Icons.favorite
+                                                : Icons.favorite_border_rounded,
+                                            color: temp.contains(x['title'])
+                                                ? Colors.red
+                                                : wh,
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        height: 30,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                            color: y,
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: Center(
-                                          child: Text('Open',
-                                              style: TextStyle(
-                                                fontSize: 8,
-                                                fontWeight: FontWeight.bold,
-                                                color: wh,
-                                              )),
+                                        Container(
+                                          height: 30,
+                                          width: 70,
+                                          decoration: BoxDecoration(
+                                              color: y,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Center(
+                                            child: Text('Open',
+                                                style: TextStyle(
+                                                  fontSize: 8,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: wh,
+                                                )),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   )
                                 ],
                               ),
