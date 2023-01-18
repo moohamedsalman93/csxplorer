@@ -1,6 +1,7 @@
 import 'package:csexp/const/auth.dart';
 import 'package:csexp/const/const.dart';
 import 'package:csexp/const/shimmer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,7 @@ class Hscreen extends StatefulWidget {
 }
 
 class _HscreenState extends State<Hscreen> {
+  final user = FirebaseAuth.instance.currentUser!.uid;
   List<String> items = [
     "Course",
     "Certificate",
@@ -50,9 +52,47 @@ class _HscreenState extends State<Hscreen> {
   late List<Widget> title = [Course(), Certificate(), Job(), Roadmap()];
   int current = 0;
   int i = 0;
-  List<String> temp = [];
+  List temp = [];
 
   Auth a = Auth();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getfire();
+    print(temp);
+  }
+
+  addfire(t) async {
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(user.toString())
+        .collection('fav')
+        .doc(t)
+        .set({"productId": t});
+  }
+
+  delfire(t) async {
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(user.toString())
+        .collection('fav')
+        .doc(t)
+        .delete();
+  }
+
+  getfire() async {
+    var sa = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(user.toString())
+        .collection('fav')
+        .get();
+    setState(() {
+      temp = sa.docs.map((e) => e.data()['productId']).toList();
+    });
+    print(temp);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -499,146 +539,146 @@ class _HscreenState extends State<Hscreen> {
         ),
       );
 
-  Widget listed(t) => StatefulBuilder(builder: (context, mys) {
-        return SizedBox(
-            width: double.infinity,
-            height: 260,
-            child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('all')
-                    .where('topic', isEqualTo: t)
-                    .snapshots(),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(
-                        child: Text("Something went Wrong",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: wh,
-                                fontSize: 30)));
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return SizedBox(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          backgroundColor: Colors.black,
-                          color: ly,
+  Widget listed(t) => SizedBox(
+      width: double.infinity,
+      height: 260,
+      child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('all')
+              .where('topic', isEqualTo: t)
+              .snapshots(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                  child: Text("Something went Wrong",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: wh,
+                          fontSize: 30)));
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return SizedBox(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.black,
+                    color: ly,
+                  ),
+                ),
+              );
+            }
+            return ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: snapshot.data!.docs.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (ctx, ind) {
+                  QueryDocumentSnapshot x = snapshot.data.docs[ind];
+                  return Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(5),
+                        width: 164,
+                        height: 244,
+                        decoration: BoxDecoration(
+                          color: b,
+                          borderRadius: BorderRadius.circular(20),
+                          border:
+                              Border.all(color: wh.withOpacity(0.3), width: 1),
                         ),
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: snapshot.data!.docs.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (ctx, ind) {
-                        QueryDocumentSnapshot x = snapshot.data.docs[ind];
-                        return Column(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Container(
-                              margin: const EdgeInsets.all(5),
-                              width: 164,
-                              height: 244,
-                              decoration: BoxDecoration(
-                                color: b,
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                    color: wh.withOpacity(0.3), width: 1),
-                              ),
-                              child: Column(
+                            // CachedNetworkImage(
+                            //   imageUrl: x["img"],
+                            //   imageBuilder: (ctx, imageProvider) =>
+                            //       Container(
+                            //     height: 124,
+                            //     width: 154,
+                            //     decoration: BoxDecoration(
+                            //       borderRadius: BorderRadius.circular(20),
+                            //       border: Border.all(
+                            //           color: wh.withOpacity(0.3),
+                            //           width: 1),
+                            //       image: DecorationImage(
+                            //         image: imageProvider,
+                            //       ),
+                            //     ),
+                            //   ),
+                            //   placeholder: (context, url) => mainimg(
+                            //     124.0,
+                            //     154.0,
+                            //   ),
+                            //   errorWidget: (context, url, error) =>
+                            //       Lottie.asset(
+                            //     'assets/noimg.json',
+                            //     height: 124,
+                            //     width: 154,
+                            //   ),
+                            // ),
+
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(x['title'],
+                                  maxLines: 1,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                  )),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  // CachedNetworkImage(
-                                  //   imageUrl: x["img"],
-                                  //   imageBuilder: (ctx, imageProvider) =>
-                                  //       Container(
-                                  //     height: 124,
-                                  //     width: 154,
-                                  //     decoration: BoxDecoration(
-                                  //       borderRadius: BorderRadius.circular(20),
-                                  //       border: Border.all(
-                                  //           color: wh.withOpacity(0.3),
-                                  //           width: 1),
-                                  //       image: DecorationImage(
-                                  //         image: imageProvider,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  //   placeholder: (context, url) => mainimg(
-                                  //     124.0,
-                                  //     154.0,
-                                  //   ),
-                                  //   errorWidget: (context, url, error) =>
-                                  //       Lottie.asset(
-                                  //     'assets/noimg.json',
-                                  //     height: 124,
-                                  //     width: 154,
-                                  //   ),
-                                  // ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (temp.contains(x['title'])) {
+                                        delfire(x['title']);
+                                        getfire();
+                                        setState(() {});
+                                      } else {
+                                        addfire(x['title']);
+                                        getfire();
 
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 8),
-                                    child: Text(x['title'],
-                                        maxLines: 1,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                        )),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            mys(() {});
+                                        //temp.add(x['title']);
+                                      }
 
-                                            if (temp.contains(x['title'])) {
-                                              temp.remove(x['title']);
-                                            } else {
-                                              temp.add(x['title']);
-                                            }
-                                            print(temp);
-                                          },
-                                          child: Icon(
-                                            temp.contains(x['title'])
-                                                ? Icons.favorite
-                                                : Icons.favorite_border_rounded,
-                                            color: temp.contains(x['title'])
-                                                ? Colors.red
-                                                : wh,
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 30,
-                                          width: 70,
-                                          decoration: BoxDecoration(
-                                              color: y,
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          child: Center(
-                                            child: Text('Open',
-                                                style: TextStyle(
-                                                  fontSize: 8,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: wh,
-                                                )),
-                                          ),
-                                        ),
-                                      ],
+                                      print(temp);
+                                    },
+                                    child: Icon(
+                                      temp.contains(x['title'])
+                                          ? Icons.favorite
+                                          : Icons.favorite_border_rounded,
+                                      color: temp.contains(x['title'])
+                                          ? Colors.red
+                                          : wh,
                                     ),
-                                  )
+                                  ),
+                                  Container(
+                                    height: 30,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                        color: y,
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Center(
+                                      child: Text('Open',
+                                          style: TextStyle(
+                                            fontSize: 8,
+                                            fontWeight: FontWeight.bold,
+                                            color: wh,
+                                          )),
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
+                            )
                           ],
-                        );
-                      });
-                }));
-      });
+                        ),
+                      ),
+                    ],
+                  );
+                });
+          }));
 }
