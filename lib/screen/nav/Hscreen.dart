@@ -228,13 +228,13 @@ class _HscreenState extends State<Hscreen> {
         //mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          head("programming","programming"),
-          head("Adobe","adobe"),
-          head("Game development","game"),
-          head("Office","microsoft"),
-          head("UI/UX","ui"),
-          head("Animation","animation"),
-          head("Cloud","cloud"),
+          head("programming", "Programming"),
+          head("Adobe", "adobe"),
+          head("Game development", "game"),
+          head("Office", "microsoft"),
+          head("UI/UX", "ui"),
+          head("Animation", "animation"),
+          head("Cloud", "cloud"),
         ],
       );
 
@@ -511,7 +511,7 @@ class _HscreenState extends State<Hscreen> {
 
   Widget Roadmap() => Container();
 
-  Widget head(t,t2) => Padding(
+  Widget head(t, t2) => Padding(
         padding: const EdgeInsets.all(20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -524,8 +524,11 @@ class _HscreenState extends State<Hscreen> {
                 )),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) =>  course(title: t2,text: t,)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => course(
+                          title: t2,
+                          text: t,
+                        )));
               },
               child: Text(
                 'View',
@@ -535,5 +538,4 @@ class _HscreenState extends State<Hscreen> {
           ],
         ),
       );
-
- }
+}
