@@ -1,6 +1,7 @@
 import 'package:csexp/const/auth.dart';
 import 'package:csexp/const/const.dart';
 import 'package:csexp/const/shimmer.dart';
+import 'package:csexp/screen/body/course.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -227,20 +228,13 @@ class _HscreenState extends State<Hscreen> {
         //mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          head("programming"),
-          listed('Programming'),
-          head("Adobe"),
-          listed("adobe"),
-          head("Game development"),
-          listed("game"),
-          head("Office"),
-          listed("microsoft"),
-          head("UI/UX"),
-          listed("ui"),
-          head("Animation"),
-          listed("animation"),
-          head("Cloud"),
-          listed("cloud"),
+          head("programming","programming"),
+          head("Adobe","adobe"),
+          head("Game development","game"),
+          head("Office","microsoft"),
+          head("UI/UX","ui"),
+          head("Animation","animation"),
+          head("Cloud","cloud"),
         ],
       );
 
@@ -517,7 +511,7 @@ class _HscreenState extends State<Hscreen> {
 
   Widget Roadmap() => Container();
 
-  Widget head(t) => Padding(
+  Widget head(t,t2) => Padding(
         padding: const EdgeInsets.all(20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -529,7 +523,10 @@ class _HscreenState extends State<Hscreen> {
                   color: Colors.white,
                 )),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) =>  course(title: t2,text: t,)));
+              },
               child: Text(
                 'View',
                 style: TextStyle(color: ly),
@@ -539,146 +536,4 @@ class _HscreenState extends State<Hscreen> {
         ),
       );
 
-  Widget listed(t) => SizedBox(
-      width: double.infinity,
-      height: 260,
-      child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('all')
-              .where('topic', isEqualTo: t)
-              .snapshots(),
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                  child: Text("Something went Wrong",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: wh,
-                          fontSize: 30)));
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return SizedBox(
-                child: Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.black,
-                    color: ly,
-                  ),
-                ),
-              );
-            }
-            return ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: snapshot.data!.docs.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (ctx, ind) {
-                  QueryDocumentSnapshot x = snapshot.data.docs[ind];
-                  return Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(5),
-                        width: 164,
-                        height: 244,
-                        decoration: BoxDecoration(
-                          color: b,
-                          borderRadius: BorderRadius.circular(20),
-                          border:
-                              Border.all(color: wh.withOpacity(0.3), width: 1),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            // CachedNetworkImage(
-                            //   imageUrl: x["img"],
-                            //   imageBuilder: (ctx, imageProvider) =>
-                            //       Container(
-                            //     height: 124,
-                            //     width: 154,
-                            //     decoration: BoxDecoration(
-                            //       borderRadius: BorderRadius.circular(20),
-                            //       border: Border.all(
-                            //           color: wh.withOpacity(0.3),
-                            //           width: 1),
-                            //       image: DecorationImage(
-                            //         image: imageProvider,
-                            //       ),
-                            //     ),
-                            //   ),
-                            //   placeholder: (context, url) => mainimg(
-                            //     124.0,
-                            //     154.0,
-                            //   ),
-                            //   errorWidget: (context, url, error) =>
-                            //       Lottie.asset(
-                            //     'assets/noimg.json',
-                            //     height: 124,
-                            //     width: 154,
-                            //   ),
-                            // ),
-
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: Text(x['title'],
-                                  maxLines: 1,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                  )),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (temp.contains(x['title'])) {
-                                        delfire(x['title']);
-                                        getfire();
-                                        setState(() {});
-                                      } else {
-                                        addfire(x['title']);
-                                        getfire();
-
-                                        //temp.add(x['title']);
-                                      }
-
-                                      print(temp);
-                                    },
-                                    child: Icon(
-                                      temp.contains(x['title'])
-                                          ? Icons.favorite
-                                          : Icons.favorite_border_rounded,
-                                      color: temp.contains(x['title'])
-                                          ? Colors.red
-                                          : wh,
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 30,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                        color: y,
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Center(
-                                      child: Text('Open',
-                                          style: TextStyle(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.bold,
-                                            color: wh,
-                                          )),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                });
-          }));
-}
+ }
