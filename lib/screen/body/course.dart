@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexp/const/const.dart';
 import 'package:csexp/const/shimmer.dart';
+import 'package:csexp/screen/body/youtube.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -37,50 +38,7 @@ class _courseState extends State<course> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-                height: 100,
-                child: Center(
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border:
-                              Border.all(color: wh.withOpacity(0.5), width: 1),
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                              borderRadius: BorderRadius.circular(10),
-                              splashColor: ly,
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Ink(
-                                height: 50,
-                                width: 50,
-                                child: Center(
-                                    child: Icon(
-                                  Icons.arrow_back_ios_new_rounded,
-                                  color: wh,
-                                )),
-                              )),
-                        ),
-                      ),
-                      Expanded(flex: 1, child: Container()),
-                       Text(
-                        widget.text,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Expanded(flex: 2, child: Container())
-                    ],
-                  ),
-                ),
-              ),
+              appbared(widget.text, context),
               StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('all')
@@ -141,7 +99,12 @@ class _courseState extends State<course> {
                                       const Color.fromARGB(255, 2, 119, 173)
                                           .withOpacity(0.5),
                                   onTap: () {
-                                    
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => youtube(
+                                                  title: x['title'],
+                                                  simg: x["img"],
+                                                )));
                                   },
                                   child: Ink(
                                     padding: EdgeInsets.all(5),
