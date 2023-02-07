@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -23,49 +25,53 @@ class _RoadmapState extends State<Roadmap> {
     return Scaffold(
         backgroundColor: b,
         body: Container(
-            height: h,
-            width: w,
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(140, 83, 253, 0.31),
-                Color.fromRGBO(140, 83, 253, 0)
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )),
-            child: Stack(children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 120,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Text("Role Based Roadmap",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          )),
-                    ),
-                    grid(widget.Rbased),
-                    const Padding(
-                      padding: EdgeInsets.all(15.0),
-                      child: Text("Skill Based Roadmap",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          )),
-                    ),
-                    grid(widget.Sbased)
-                  ],
-                ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/bgggg.png'),
+                fit: BoxFit.fill,
               ),
-              appbared("Developer Roadmaps", context)
-            ])));
+            ),
+            child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: 15,
+                  sigmaY: 15,
+                ),
+                child: Container(
+                    height: h,
+                    width: w,
+                    color: b.withOpacity(0.6),
+                    child: Stack(children: [
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 120,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: Text("Role Based Roadmap",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  )),
+                            ),
+                            grid(widget.Rbased),
+                            const Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: Text("Skill Based Roadmap",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  )),
+                            ),
+                            grid(widget.Sbased)
+                          ],
+                        ),
+                      ),
+                      appbared("Developer Roadmaps", context)
+                    ])))));
   }
 
   Widget grid(t) => GridView.builder(
@@ -82,7 +88,7 @@ class _RoadmapState extends State<Roadmap> {
       itemBuilder: (context, i) {
         return Container(
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: wh.withOpacity(0.1),
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(

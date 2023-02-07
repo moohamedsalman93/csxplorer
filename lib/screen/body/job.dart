@@ -194,7 +194,9 @@ class _JobState extends State<Job> {
                 top: 0.0,
                 left: 0.0,
                 right: 0.0,
-                child: Container(color: b, child: appbared("Jobs", context))),
+                child: Container(
+                    color: b.withOpacity(0.1),
+                    child: appbared("Jobs", context))),
           ],
         ),
       ),

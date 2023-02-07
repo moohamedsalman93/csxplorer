@@ -1,16 +1,11 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexp/const/auth.dart';
 import 'package:csexp/const/const.dart';
-import 'package:csexp/const/shimmer.dart';
 import 'package:csexp/screen/body/course.dart';
+import 'package:csexp/screen/nav/Pscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
-
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:lottie/lottie.dart';
 
 import '../body/Roadmap.dart';
 import '../body/ceritificate.dart';
@@ -25,6 +20,8 @@ class Hscreen extends StatefulWidget {
 
 class _HscreenState extends State<Hscreen> {
   final user = FirebaseAuth.instance.currentUser!.uid;
+  final _isAnonymous = FirebaseAuth.instance.currentUser!.isAnonymous;
+
   List<String> items = [
     "Certificate",
     "Job",
@@ -59,8 +56,11 @@ class _HscreenState extends State<Hscreen> {
     Certificate(
       temp: temp,
     ),
-    Job(),
-    Roadmap(Rbased:Rbased,Sbased:Sbased,)
+    const Job(),
+    Roadmap(
+      Rbased: Rbased,
+      Sbased: Sbased,
+    )
   ];
   int current = 0;
   int i = 0;
@@ -70,8 +70,10 @@ class _HscreenState extends State<Hscreen> {
   @override
   void initState() {
     super.initState();
-    getfire();
-    getfire2();
+    if (!_isAnonymous) {
+      getfire();
+      getfire2();
+    }
   }
 
   getfire() async {
@@ -81,7 +83,7 @@ class _HscreenState extends State<Hscreen> {
         .collection('fav')
         .get();
     setState(() {
-      temp = sa.docs.map((e) => e.data()['productId']).toList();
+      temp = sa.docs.map((e) => e.data()['title']).toList();
     });
     print(temp);
   }
@@ -110,7 +112,7 @@ class _HscreenState extends State<Hscreen> {
       body: SingleChildScrollView(
         child: Column(children: [
           SizedBox(
-            height: 70,
+            height: 120,
             child: Row(
               children: [
                 Expanded(
@@ -133,16 +135,27 @@ class _HscreenState extends State<Hscreen> {
                 ),
                 Expanded(
                     flex: 3,
-                    child: Center(
-                      child: Text(
-                        "Welcome salman",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: wh,
-                            fontFamily: 'Montserrat',
-                            fontSize: 20),
-                      ),
+                    child: Wrap(
+                      children: [
+                        Text(
+                          "CS",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: ly,
+                              fontFamily: 'Montserrat',
+                              fontSize: 30),
+                        ),
+                        Text(
+                          "exp",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: wh,
+                              fontFamily: 'Montserrat',
+                              fontSize: 28),
+                        ),
+                      ],
                     )),
                 Expanded(flex: 1, child: Container())
               ],
@@ -189,9 +202,10 @@ class _HscreenState extends State<Hscreen> {
                           width: 120,
                           height: 40,
                           decoration: BoxDecoration(
-                              color: y,
+                              color: wh.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: wh, width: 1)),
+                              border: Border.all(
+                                  color: wh.withOpacity(0.3), width: 0.8)),
                           child: Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -235,18 +249,17 @@ class _HscreenState extends State<Hscreen> {
     );
   }
 
-  Widget head(t, t2) => Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(t,
-                style: const TextStyle(
-                  fontSize: true ? 18 : 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                )),
-            GestureDetector(
+  Widget head(t, t2) => Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: Colors.transparent),
+      child: Material(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.transparent,
+          child: InkWell(
+              borderRadius: BorderRadius.circular(10),
+              splashColor: ly,
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => course(
@@ -254,12 +267,20 @@ class _HscreenState extends State<Hscreen> {
                           text: t,
                         )));
               },
-              child: Text(
-                'View',
-                style: TextStyle(color: ly),
-              ),
-            )
-          ],
-        ),
-      );
+              child: Ink(
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        t,
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: ly,
+                      )
+                    ],
+                  )))));
 }

@@ -1,7 +1,10 @@
+import 'dart:ui';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexp/const/const.dart';
+import 'package:csexp/screen/nav/ciii.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 import 'nav/Fscreen.dart';
 import 'nav/Pscreen.dart';
@@ -21,11 +24,9 @@ class _HomeState extends State<Home> {
   final screen = [
     const Hscreen(),
     const Sscreen(),
-    const Fscreen(),
-    const Pscreen(),
+    Fscreen(),
+    Pscreen(),
   ];
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -35,40 +36,44 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: b,
       body: Container(
-          height: h,
-          width: w,
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(140, 83, 253, 0.31),
-              Color.fromRGBO(140, 83, 253, 0)
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          )),
-          child: screen[ci]),
+            image: DecorationImage(
+              image: AssetImage('assets/bgggg.png'),
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 15,
+                sigmaY: 15,
+              ),
+              child: Container(
+                  height: h,
+                  width: w,
+                  color: b.withOpacity(0.6),
+                  child: screen[ci]))),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: ci,
           onTap: (index) => setState(
                 () => ci = index,
               ),
           selectedItemColor: y,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-                backgroundColor: Colors.transparent,
-                icon: Icon(Icons.home),
+                backgroundColor: b,
+                icon: const Icon(Icons.home),
                 label: 'Home'),
             BottomNavigationBarItem(
-                backgroundColor: Colors.transparent,
-                icon: Icon(Icons.search),
+                backgroundColor: b,
+                icon: const Icon(Icons.search),
                 label: 'Search'),
             BottomNavigationBarItem(
-                backgroundColor: Colors.transparent,
-                icon: Icon(Icons.favorite_border),
+                backgroundColor: b,
+                icon: const Icon(Icons.favorite_border),
                 label: 'Fav'),
             BottomNavigationBarItem(
-                backgroundColor: Colors.transparent,
-                icon: Icon(Icons.person_outline),
+                backgroundColor: b,
+                icon: const Icon(Icons.person_outline),
                 label: 'Profile'),
           ]),
     );

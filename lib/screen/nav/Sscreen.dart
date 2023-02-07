@@ -1,8 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexp/const/const.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../const/shimmer.dart';
+import '../body/youtube.dart';
 
 class Sscreen extends StatefulWidget {
   const Sscreen({super.key});
@@ -15,6 +19,27 @@ final TextEditingController searchcon = TextEditingController();
 
 class _SscreenState extends State<Sscreen> {
   List searchResult = [];
+  final user = FirebaseAuth.instance.currentUser!.uid;
+  List temp = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getfire();
+  }
+
+  getfire() async {
+    var sa = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(user.toString())
+        .collection('fav')
+        .get();
+    setState(() {
+      temp = sa.docs.map((e) => e.data()['title']).toList();
+    });
+    print(temp);
+  }
+
   void searchFromFirebase(String query) async {
     var sa = await FirebaseFirestore.instance
         .collection('all')
@@ -30,11 +55,20 @@ class _SscreenState extends State<Sscreen> {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
-            child: Column(children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const SizedBox(
             height: 40,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text(
+              "Search",
+              style: TextStyle(color: wh, fontSize: 30),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
@@ -42,36 +76,35 @@ class _SscreenState extends State<Sscreen> {
               height: 46,
               decoration: BoxDecoration(
                 borderRadius: BorderRadiusDirectional.circular(10),
-                color: wh,
+                color: wh.withOpacity(0.1),
               ),
               child: TextField(
                   controller: searchcon,
-                  style: TextStyle(color: b),
+                  style: TextStyle(color: wh),
                   autofocus: true,
                   cursorHeight: 20,
-                  cursorColor: ly,
+                  cursorColor: wh,
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.search,
                       size: 30,
-                      color: ly,
+                      color: wh,
                     ),
                     suffixIcon: Container(
                       width: 10,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: const Color.fromRGBO(225, 225, 231, 1)),
                       child: IconButton(
-                        icon: const Icon(Icons.cancel_outlined),
+                        icon: Icon(Icons.cancel_outlined, color: wh),
                         onPressed: () {
                           searchcon.clear();
+                          setState(() {});
                         },
                       ),
                     ),
                     border: InputBorder.none,
-                    hintText: "Python",
+                    hintText: "Search...",
                     hintStyle: TextStyle(
-                        textBaseline: TextBaseline.alphabetic, color: b),
+                        textBaseline: TextBaseline.alphabetic,
+                        color: wh.withOpacity(0.5)),
                   ),
                   onChanged: (query) {
                     searchFromFirebase(query);
@@ -96,36 +129,43 @@ class _SscreenState extends State<Sscreen> {
                 )),
           ),
           GridView.builder(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(10),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: true ? 2 : 4,
+                crossAxisCount: true ? 3 : 4,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
-                mainAxisExtent: 230,
-                childAspectRatio: 1,
+                childAspectRatio: 0.80,
               ),
               itemCount: searchResult.length,
               primary: false,
               shrinkWrap: true,
               itemBuilder: (context, i) {
                 return Container(
-                  margin: const EdgeInsets.all(5),
-                  width: 164,
-                  height: 244,
                   decoration: BoxDecoration(
-                    color: b,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: wh.withOpacity(0.3), width: 1),
+                    color: wh.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        blurRadius: 4,
+                        offset: const Offset(0, 0),
+                      )
+                    ],
                   ),
                   child: Material(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.black,
+                    color: Colors.transparent,
                     child: InkWell(
-                        borderRadius: BorderRadius.circular(20),
-                        splashColor: y.withOpacity(1),
-                        //onTap: () {},
+                        borderRadius: BorderRadius.circular(15),
+                        splashColor: y.withOpacity(0.5),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => youtube(
+                                  title: searchResult[i]['title'],
+                                  simg: searchResult[i]["img"],
+                                  temp: temp)));
+                        },
                         child: Ink(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(5),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
@@ -133,23 +173,16 @@ class _SscreenState extends State<Sscreen> {
                                 imageUrl: searchResult[i]["img"],
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
-                                  height: 124,
-                                  width: 154,
+                                  width: 80,
+                                  height: 80,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                        color: wh.withOpacity(0.3), width: 1),
                                     image: DecorationImage(
                                       image: imageProvider,
                                     ),
                                   ),
                                 ),
-                                // placeholder:
-                                //     (context, url) =>
-                                //         mainimg(
-                                //   h * 0.14,
-                                //   w * 0.7,
-                                // ),
+                                placeholder: (context, url) =>
+                                    mainimg(100.0, 100.0),
                                 errorWidget: (context, url, error) =>
                                     Lottie.asset(
                                   'assets/noimg.json',
@@ -157,42 +190,21 @@ class _SscreenState extends State<Sscreen> {
                                   height: 100,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8),
+                              Center(
                                 child: Text(searchResult[i]['title'],
-                                    maxLines: 1,
-                                    textAlign: TextAlign.center,
+                                    softWrap: false,
+                                    overflow: TextOverflow.fade,
                                     style: const TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 18,
                                       color: Colors.white,
                                     )),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    height: 30,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                        color: y,
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Center(
-                                      child: Text('Open',
-                                          style: TextStyle(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.bold,
-                                            color: wh,
-                                          )),
-                                    ),
-                                  ),
-                                ],
-                              )
                             ],
                           ),
                         )),
                   ),
                 );
-              }),
+              })
         ],
       ));
 }

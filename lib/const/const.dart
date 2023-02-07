@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Color ly = const Color.fromARGB(255, 140, 83, 253);
-Color y = const Color.fromARGB(255, 99, 41, 215);
+Color y = const Color.fromARGB(255, 140, 83, 253);
 Color b = Colors.black;
 Color wh = Colors.white;
 String font = 'Montserrat';
@@ -10,18 +10,19 @@ String font = 'Montserrat';
 Widget appbared(title, context) => Container(
       padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
       height: 100,
-      decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(color: b, blurRadius: 10.0, offset: Offset(0.0, 0.75))
-          ],
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(140, 83, 253, 0.31),
-              Color.fromRGBO(140, 83, 253, 0)
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          )),
+      color: Colors.transparent,
+      // decoration: BoxDecoration(
+      //     boxShadow: [
+      //       BoxShadow(color: b, blurRadius: 10.0, offset: Offset(0.0, 0.75))
+      //     ],
+      //     gradient: LinearGradient(
+      //       colors: [
+      //         Color.fromRGBO(140, 83, 253, 0.31),
+      //         Color.fromRGBO(140, 83, 253, 0)
+      //       ],
+      //       begin: Alignment.topLeft,
+      //       end: Alignment.bottomRight,
+      //     )),
       child: Center(
         child: Row(
           children: [
@@ -65,14 +66,14 @@ Widget appbared(title, context) => Container(
     );
 
 jandr(String url) async {
-    if (await canLaunch(url)) {
-      final bool nativeAppLaunchSucceeded = await launch(
-        url,
-        forceSafariVC: false,
-        universalLinksOnly: true,
-      );
-      if (!nativeAppLaunchSucceeded) {
-        await launch(url, forceSafariVC: true);
-      }
+  if (await canLaunch(url)) {
+    final bool nativeAppLaunchSucceeded = await launch(
+      url,
+      forceSafariVC: false,
+      universalLinksOnly: true,
+    );
+    if (!nativeAppLaunchSucceeded) {
+      await launch(url, forceSafariVC: true);
     }
   }
+}

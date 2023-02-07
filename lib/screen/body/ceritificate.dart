@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +28,13 @@ class _CertificateState extends State<Certificate> {
   List d1 = ["Google", "Microsoft"];
   List d2 = ["Harvard university"];
 
-  addfire(t) async {
+  addfire(t, t2) async {
     await FirebaseFirestore.instance
         .collection('user')
         .doc(user.toString())
         .collection('fav')
         .doc(t)
-        .set({"productId": t});
+        .set({"title": t, 'under': 'certificate', 'by': t2});
   }
 
   delfire(t) async {
@@ -49,9 +51,10 @@ class _CertificateState extends State<Certificate> {
         .collection('user')
         .doc(user.toString())
         .collection('fav')
+        .where('under', isEqualTo: 'certificate')
         .get();
     setState(() {
-      temp = sa.docs.map((e) => e.data()['productId']).toList();
+      temp = sa.docs.map((e) => e.data()['title']).toList();
     });
     print(temp);
   }
@@ -74,164 +77,167 @@ class _CertificateState extends State<Certificate> {
     return Scaffold(
       backgroundColor: b,
       body: Container(
-        height: h,
-        width: w,
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          colors: [
-            Color.fromRGBO(140, 83, 253, 0.31),
-            Color.fromRGBO(140, 83, 253, 0)
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        )),
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 120,
-                  ),
-                  //learning platforms
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 20),
-                        child: Text("Learning Platform",
-                            style: TextStyle(
-                              fontSize: true ? 18 : 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            )),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              s1 = !s1;
-                              s2 = true;
-                              s3 = true;
-                            });
-                          },
-                          icon: Icon(
-                            s1
-                                ? Icons.arrow_downward_rounded
-                                : Icons.arrow_upward_rounded,
-                            color: ly,
-                          )),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  s1
-                      ? SizedBox(
-                          height: 200,
-                          width: w,
-                          child: _certi("Learning platform"))
-                      : Container(
-                          color: b.withOpacity(0.5),
-                          child: largecon("Learning platform", d)),
-                  const SizedBox(
-                    height: 12.0,
-                  ),
-                  //bigtech
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 20),
-                        child: Text("Bigtech companies",
-                            style: TextStyle(
-                              fontSize: true ? 18 : 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            )),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              s1 = true;
-                              s2 = !s2;
-                              s3 = true;
-                            });
-                          },
-                          icon: Icon(
-                            s2
-                                ? Icons.arrow_downward_rounded
-                                : Icons.arrow_upward_rounded,
-                            color: ly,
-                          )),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  s2
-                      ? SizedBox(
-                          height: 200,
-                          width: w,
-                          child: _certi("Bigtech companies"))
-                      : Container(
-                          color: b.withOpacity(0.5),
-                          child: largecon("Bigtech companies", d1)),
-                  const SizedBox(
-                    height: 12.0,
-                  ),
-                  //leading university
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 20),
-                        child: Text("Leading universities",
-                            style: TextStyle(
-                              fontSize: true ? 18 : 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            )),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              s1 = true;
-                              s2 = true;
-                              s3 = !s3;
-                            });
-                          },
-                          icon: Icon(
-                            s3
-                                ? Icons.arrow_downward_rounded
-                                : Icons.arrow_upward_rounded,
-                            color: ly,
-                          )),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  s3
-                      ? SizedBox(
-                          height: 200,
-                          width: w,
-                          child: _certi("Leading universities"))
-                      : Container(
-                          color: b.withOpacity(0.5),
-                          child: largecon("Leading universities", d2)),
-                ],
-              ),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/bgggg.png'),
+              fit: BoxFit.fill,
             ),
-            Positioned(
-                top: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: Container(
-                    color: b, child: appbared("Certificate", context))),
-          ],
-        ),
-      ),
+          ),
+          child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 15,
+                sigmaY: 15,
+              ),
+              child: Container(
+                height: h,
+                width: w,
+                color: b.withOpacity(0.6),
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 120,
+                          ),
+                          //learning platforms
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 20),
+                                child: Text("Learning Platform",
+                                    style: TextStyle(
+                                      fontSize: true ? 18 : 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    )),
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      s1 = !s1;
+                                      s2 = true;
+                                      s3 = true;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    s1
+                                        ? Icons.arrow_downward_rounded
+                                        : Icons.arrow_upward_rounded,
+                                    color: ly,
+                                  )),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          AnimatedContainer(
+                            height: s1 ? 200 : 500,
+                            width: double.infinity,
+                            duration: Duration(milliseconds: 600),
+                            child: s1
+                                ? _certi("Learning platform")
+                                : largecon("Learning platform", d),
+                          ),
+                          const SizedBox(
+                            height: 12.0,
+                          ),
+                          //bigtech
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 20),
+                                child: Text("Bigtech companies",
+                                    style: TextStyle(
+                                      fontSize: true ? 18 : 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    )),
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      s1 = true;
+                                      s2 = !s2;
+                                      s3 = true;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    s2
+                                        ? Icons.arrow_downward_rounded
+                                        : Icons.arrow_upward_rounded,
+                                    color: ly,
+                                  )),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          AnimatedContainer(
+                            height: s2 ? 200 : 500,
+                            width: double.infinity,
+                            duration: Duration(milliseconds: 600),
+                            child: s2
+                                ? _certi("Bigtech companies")
+                                : largecon("Bigtech companies", d1),
+                          ),
+                          const SizedBox(
+                            height: 12.0,
+                          ),
+                          //leading university
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(left: 20),
+                                child: Text("Leading universities",
+                                    style: TextStyle(
+                                      fontSize: true ? 18 : 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    )),
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      s1 = true;
+                                      s2 = true;
+                                      s3 = !s3;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    s3
+                                        ? Icons.arrow_downward_rounded
+                                        : Icons.arrow_upward_rounded,
+                                    color: ly,
+                                  )),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          AnimatedContainer(
+                              height: s3 ? 200 : 500,
+                              width: double.infinity,
+                              duration: Duration(milliseconds: 600),
+                              child: s3
+                                  ? _certi("Leading universities")
+                                  : largecon("Leading universities", d2)),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                        top: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                        child:
+                            Container(child: appbared("Certificate", context))),
+                  ],
+                ),
+              ))),
     );
   }
 
@@ -271,7 +277,7 @@ class _CertificateState extends State<Certificate> {
                         right: 8, left: 8, top: 24, bottom: 12),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
-                      color: b,
+                      color: wh.withOpacity(0.1),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,7 +334,7 @@ class _CertificateState extends State<Certificate> {
                                     getfire();
                                     setState(() {});
                                   } else {
-                                    addfire(x['title']);
+                                    addfire(x['title'], x['by']);
                                     getfire();
                                   }
                                 },
@@ -423,7 +429,7 @@ class _CertificateState extends State<Certificate> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: ly,
+                              color: wh.withOpacity(0.3),
                             )),
                         Expanded(child: Container()),
                         Row(
@@ -432,7 +438,7 @@ class _CertificateState extends State<Certificate> {
                             Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: ly),
+                                    color: wh.withOpacity(0.1)),
                                 child: Material(
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.transparent,
@@ -456,7 +462,7 @@ class _CertificateState extends State<Certificate> {
                                     getfire();
                                     setState(() {});
                                   } else {
-                                    addfire(x['title']);
+                                    addfire(x['title'], x['by']);
                                     getfire();
                                   }
                                 },
