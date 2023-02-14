@@ -52,6 +52,7 @@ dependencies:
   flutter_share: ^2.0.0
   share: ^2.0.4
   share_plus: ^6.3.0
+  flutter_screenutil: ^5.6.1
 
 dev_dependencies:
   flutter_test:

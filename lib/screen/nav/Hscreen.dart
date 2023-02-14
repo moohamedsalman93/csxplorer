@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexp/const/auth.dart';
 import 'package:csexp/const/const.dart';
+import 'package:csexp/const/shimmer.dart';
 import 'package:csexp/screen/body/course.dart';
 import 'package:csexp/screen/nav/Pscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../body/Roadmap.dart';
 import '../body/ceritificate.dart';
@@ -28,27 +31,345 @@ class _HscreenState extends State<Hscreen> {
     "Roadmap",
   ];
   final List<Widget> car = [
-    Container(
-      decoration:
-          BoxDecoration(color: b, borderRadius: BorderRadius.circular(10)),
+    CachedNetworkImage(
+      imageUrl:
+          "https://www.classcentral.com/report/wp-content/uploads/2021/12/free-certificates-banner.png",
+      imageBuilder: (context, imageProvider) => Container(
+          padding: const EdgeInsets.all(20),
+          width: 600,
+          decoration: BoxDecoration(
+            color: b,
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Container()),
+              Text(
+                "Free Certificate",
+                style: TextStyle(
+                    color: b,
+                    fontSize: 20,
+                    shadows: [
+                      Shadow(
+                        color: Colors.grey,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 4.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "From leading universities",
+                style: TextStyle(
+                    color: wh,
+                    shadows: [
+                      Shadow(
+                        color: b,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 4.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.w400),
+              ),
+            ],
+          )),
+      placeholder: (context, url) => Center(
+        child: CircularProgressIndicator(
+          color: ly,
+        ),
+      ),
+      errorWidget: (context, url, error) => Lottie.asset(
+        'assets/noimg.json',
+      ),
     ),
-    Container(
-      decoration:
-          BoxDecoration(color: y, borderRadius: BorderRadius.circular(10)),
+    CachedNetworkImage(
+      imageUrl:
+          "https://imgs.search.brave.com/djiHowax6UhP4qzVhB8fUGXclVwHalUz76EYoQQZK-A/rs:fit:1024:512:1/g:ce/aHR0cHM6Ly9kMzFk/bjduZnB1d2pubS5j/bG91ZGZyb250Lm5l/dC9pbWFnZXMvdmFs/b3JhY2lvbmVzLzAw/MzIvMzM3MS9GQUFO/Ry5wbmc_MTU0MjYz/NzUxMA",
+      imageBuilder: (context, imageProvider) => Container(
+          padding: const EdgeInsets.all(20),
+          width: 600,
+          decoration: BoxDecoration(
+            color: b,
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Container()),
+              Text(
+                "JOB Alert",
+                style: TextStyle(
+                    color: b,
+                    fontSize: 20,
+                    shadows: [
+                      Shadow(
+                        color: Colors.grey,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 4.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "From top MNC",
+                style: TextStyle(
+                    color: b,
+                    shadows: [
+                      Shadow(
+                        color: Colors.grey,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 4.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.w400),
+              ),
+            ],
+          )),
+      placeholder: (context, url) => Center(
+        child: CircularProgressIndicator(
+          color: ly,
+        ),
+      ),
+      errorWidget: (context, url, error) => Lottie.asset(
+        'assets/noimg.json',
+      ),
     ),
-    Container(
-      decoration:
-          BoxDecoration(color: ly, borderRadius: BorderRadius.circular(10)),
+    CachedNetworkImage(
+      imageUrl: "https://wallpapercave.com/dwp2x/wp7692192.jpg",
+      imageBuilder: (context, imageProvider) => Container(
+          padding: const EdgeInsets.all(20),
+          width: 600,
+          decoration: BoxDecoration(
+            color: b,
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Container()),
+              Text(
+                "Progamming",
+                style: TextStyle(
+                    color: wh,
+                    fontSize: 20,
+                    shadows: [
+                      Shadow(
+                        color: b,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 5.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "From top Youtubers",
+                style: TextStyle(
+                    color: wh,
+                    shadows: [
+                      Shadow(
+                        color: b,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 1.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.w400),
+              ),
+            ],
+          )),
+      placeholder: (context, url) => Center(
+        child: CircularProgressIndicator(
+          color: ly,
+        ),
+      ),
+      errorWidget: (context, url, error) => Lottie.asset(
+        'assets/noimg.json',
+      ),
     ),
   ];
-  bool ischecked = false;
+  final List<Widget> car2 = [
+    CachedNetworkImage(
+      imageUrl:
+          "https://www.classcentral.com/report/wp-content/uploads/2021/12/free-certificates-banner.png",
+      imageBuilder: (context, imageProvider) => Container(
+          padding: const EdgeInsets.all(20),
+          width: 600,
+          decoration: BoxDecoration(
+            color: b,
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Container()),
+              Text(
+                "Free Certificate",
+                style: TextStyle(
+                    color: b,
+                    fontSize: 20,
+                    shadows: [
+                      Shadow(
+                        color: Colors.grey,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 4.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "From leading universities",
+                style: TextStyle(
+                    color: wh,
+                    shadows: [
+                      Shadow(
+                        color: b,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 4.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.w400),
+              ),
+            ],
+          )),
+      placeholder: (context, url) => Center(
+        child: CircularProgressIndicator(
+          color: ly,
+        ),
+      ),
+      errorWidget: (context, url, error) => Lottie.asset(
+        'assets/noimg.json',
+      ),
+    ),
+    CachedNetworkImage(
+      imageUrl:
+          "https://imgs.search.brave.com/djiHowax6UhP4qzVhB8fUGXclVwHalUz76EYoQQZK-A/rs:fit:1024:512:1/g:ce/aHR0cHM6Ly9kMzFk/bjduZnB1d2pubS5j/bG91ZGZyb250Lm5l/dC9pbWFnZXMvdmFs/b3JhY2lvbmVzLzAw/MzIvMzM3MS9GQUFO/Ry5wbmc_MTU0MjYz/NzUxMA",
+      imageBuilder: (context, imageProvider) => Container(
+          padding: const EdgeInsets.all(20),
+          width: 600,
+          decoration: BoxDecoration(
+            color: b,
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Container()),
+              Text(
+                "JOB Alert",
+                style: TextStyle(
+                    color: b,
+                    fontSize: 20,
+                    shadows: [
+                      Shadow(
+                        color: Colors.grey,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 4.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "From top MNC",
+                style: TextStyle(
+                    color: b,
+                    shadows: [
+                      Shadow(
+                        color: Colors.grey,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 4.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.w400),
+              ),
+            ],
+          )),
+      placeholder: (context, url) => Center(
+        child: CircularProgressIndicator(
+          color: ly,
+        ),
+      ),
+      errorWidget: (context, url, error) => Lottie.asset(
+        'assets/noimg.json',
+      ),
+    ),
+    CachedNetworkImage(
+      imageUrl: "https://wallpapercave.com/dwp2x/wp7692192.jpg",
+      imageBuilder: (context, imageProvider) => Container(
+          padding: const EdgeInsets.all(20),
+          width: 600,
+          decoration: BoxDecoration(
+            color: b,
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.fill,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: Container()),
+              Text(
+                "Progamming",
+                style: TextStyle(
+                    color: wh,
+                    fontSize: 20,
+                    shadows: [
+                      Shadow(
+                        color: b,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 5.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "From top Youtubers",
+                style: TextStyle(
+                    color: wh,
+                    shadows: [
+                      Shadow(
+                        color: b,
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 1.0,
+                      )
+                    ],
+                    fontWeight: FontWeight.w400),
+              ),
+            ],
+          )),
+      placeholder: (context, url) => Center(
+        child: CircularProgressIndicator(
+          color: ly,
+        ),
+      ),
+      errorWidget: (context, url, error) => Lottie.asset(
+        'assets/noimg.json',
+      ),
+    ),
+  ];
 
   /// List of body icon
-  List<IconData> icons = [
-    Icons.explore,
-    Icons.search,
-    Icons.feed,
-  ];
   List temp = [];
   List Rbased = [];
   List Sbased = [];
@@ -72,8 +393,8 @@ class _HscreenState extends State<Hscreen> {
     super.initState();
     if (!_isAnonymous) {
       getfire();
-      getfire2();
     }
+    getfire2();
   }
 
   getfire() async {
@@ -95,7 +416,7 @@ class _HscreenState extends State<Hscreen> {
         .get();
     var sbased = await FirebaseFirestore.instance
         .collection('Roadmap')
-        .where('under', isEqualTo: 'Rbased')
+        .where('under', isEqualTo: 'Sbased')
         .get();
     setState(() {
       Rbased = rbased.docs.map((e) => e.data()['title']).toList();
@@ -105,6 +426,8 @@ class _HscreenState extends State<Hscreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isTab(BuildContext context) =>
+        MediaQuery.of(context).size.width >= 600;
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -162,10 +485,9 @@ class _HscreenState extends State<Hscreen> {
             ),
           ),
           CarouselSlider(
-            items: car,
+            items: isTab(context) ? car : car2,
             options: CarouselOptions(
-              height: 200,
-              aspectRatio: 16 / 9,
+              height: isTab(context) ? 300 : 200,
               viewportFraction: 0.8,
               initialPage: 0,
               enableInfiniteScroll: true,
@@ -198,8 +520,8 @@ class _HscreenState extends State<Hscreen> {
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           margin: const EdgeInsets.all(5),
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          width: 120,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
                           height: 40,
                           decoration: BoxDecoration(
                               color: wh.withOpacity(0.1),
@@ -207,16 +529,10 @@ class _HscreenState extends State<Hscreen> {
                               border: Border.all(
                                   color: wh.withOpacity(0.3), width: 0.8)),
                           child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Icon(icons[index], color: wh),
-                                Text(
-                                  items[index],
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500, color: wh),
-                                ),
-                              ],
+                            child: Text(
+                              items[index],
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, color: wh),
                             ),
                           ),
                         ),
@@ -279,6 +595,7 @@ class _HscreenState extends State<Hscreen> {
                       ),
                       Icon(
                         Icons.arrow_forward_ios,
+                        size: 18,
                         color: ly,
                       )
                     ],

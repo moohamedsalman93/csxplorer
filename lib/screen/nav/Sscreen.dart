@@ -54,68 +54,81 @@ class _SscreenState extends State<Sscreen> {
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
-    return Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const SizedBox(
-            height: 40,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(
-              "Search",
-              style: TextStyle(color: wh, fontSize: 30),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Container(
-              height: 46,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadiusDirectional.circular(10),
-                color: wh.withOpacity(0.1),
-              ),
-              child: TextField(
-                  controller: searchcon,
-                  style: TextStyle(color: wh),
-                  autofocus: true,
-                  cursorHeight: 20,
-                  cursorColor: wh,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.search,
-                      size: 30,
-                      color: wh,
-                    ),
-                    suffixIcon: Container(
-                      width: 10,
-                      child: IconButton(
-                        icon: Icon(Icons.cancel_outlined, color: wh),
-                        onPressed: () {
-                          searchcon.clear();
-                          setState(() {});
-                        },
-                      ),
-                    ),
-                    border: InputBorder.none,
-                    hintText: "Search...",
-                    hintStyle: TextStyle(
-                        textBaseline: TextBaseline.alphabetic,
-                        color: wh.withOpacity(0.5)),
+    bool isTab(BuildContext context) =>
+        MediaQuery.of(context).size.width >= 600;
+
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.transparent,
+          body: SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                const SizedBox(
+                  height: 40,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    "Search",
+                    style: TextStyle(color: wh, fontSize: 30),
                   ),
-                  onChanged: (query) {
-                    searchFromFirebase(query);
-                  }),
-            ),
-          ),
-          body()
-        ])));
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Container(
+                    height: 46,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadiusDirectional.circular(10),
+                      color: wh.withOpacity(0.1),
+                    ),
+                    child: TextField(
+                        controller: searchcon,
+                        style: TextStyle(fontSize: 20, color: wh),
+                        autofocus: true,
+                        cursorHeight: isTab(context) ? 30 : 18,
+                        cursorColor: wh,
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.search,
+                            size: 30,
+                            color: wh,
+                          ),
+                          suffixIcon: Container(
+                            width: 10,
+                            child: IconButton(
+                              icon: Icon(Icons.cancel_outlined, color: wh),
+                              onPressed: () {
+                                searchcon.clear();
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                          border: InputBorder.none,
+                          hintText: "Search...",
+                          hintStyle: TextStyle(
+                              textBaseline: TextBaseline.alphabetic,
+                              color: wh.withOpacity(0.5)),
+                        ),
+                        onChanged: (query) {
+                          searchFromFirebase(query);
+                        }),
+                  ),
+                ),
+                body(isTab(context))
+              ]))),
+    );
   }
 
-  Widget body() => Container(
+  Widget body(isTab) => Container(
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -130,8 +143,8 @@ class _SscreenState extends State<Sscreen> {
           ),
           GridView.builder(
               padding: const EdgeInsets.all(10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: true ? 3 : 4,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: isTab ? 4 : 3,
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 childAspectRatio: 0.80,
@@ -157,7 +170,13 @@ class _SscreenState extends State<Sscreen> {
                     child: InkWell(
                         borderRadius: BorderRadius.circular(15),
                         splashColor: y.withOpacity(0.5),
-                        onTap: () {
+                        onTap: () async {
+                          FocusScopeNode currentFocus = FocusScope.of(context);
+
+                          if (!currentFocus.hasPrimaryFocus) {
+                            currentFocus.unfocus();
+                          }
+                          await Future.delayed(Duration(milliseconds: 300));
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => youtube(
                                   title: searchResult[i]['title'],

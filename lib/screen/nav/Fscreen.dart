@@ -19,6 +19,8 @@ class Fscreen extends StatefulWidget {
 class _FscreenState extends State<Fscreen> {
   List temp = [];
   late final PageController pageController;
+  final _isAnonymous = FirebaseAuth.instance.currentUser!.isAnonymous;
+  // ignore: prefer_typing_uninitialized_variables
   var user;
 
   @override
@@ -26,8 +28,10 @@ class _FscreenState extends State<Fscreen> {
     // TODO: implement initState
     super.initState();
     pageController = PageController(initialPage: 0, viewportFraction: 0.7);
-    getfire();
-    user = FirebaseAuth.instance.currentUser!.uid;
+    if (!_isAnonymous) {
+      getfire();
+      user = FirebaseAuth.instance.currentUser!.uid;
+    }
   }
 
   getfire() async {
@@ -64,31 +68,46 @@ class _FscreenState extends State<Fscreen> {
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
+    bool isTab(BuildContext context) =>
+        MediaQuery.of(context).size.width >= 600;
+
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                height: 80,
-                child: Text(
-                  "Favorite",
-                  style: TextStyle(color: wh, fontSize: 30),
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 40,
+            ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              height: 80,
+              child: Text(
+                "Favorite",
+                style: TextStyle(color: wh, fontSize: 30),
               ),
-              _certi("certificate"),
-              _certi("youtube"),
-            ],
-          ),
+            ),
+            _isAnonymous
+                ? Center(
+                    child: Text(
+                      "Not Available on Anonymous user !",
+                      style: TextStyle(color: wh, fontSize: 18),
+                    ),
+                  )
+                : Column(
+                    children: [
+                      _certi("certificate", isTab(context)),
+                      _certi("youtube", isTab(context)),
+                    ],
+                  ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _certi(t) => StreamBuilder(
+  Widget _certi(t, isTab) => StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('user')
           .doc(user.toString())
@@ -116,7 +135,7 @@ class _FscreenState extends State<Fscreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 200,
+                      height: isTab ? 250 : 200,
                       child: PageView.builder(
                         controller: pageController,
                         itemCount: snapshot.data!.docs.length,
@@ -142,7 +161,7 @@ class _FscreenState extends State<Fscreen> {
                                     right: 8, left: 8, top: 24, bottom: 12),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  color: b,
+                                  color: wh.withOpacity(0.1),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,6 +177,9 @@ class _FscreenState extends State<Fscreen> {
                                               color: Colors.white,
                                             )),
                                       ]),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
                                     ),
                                     Text(x['by'],
                                         softWrap: false,

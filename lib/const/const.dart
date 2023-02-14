@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Color ly = const Color.fromARGB(255, 140, 83, 253);
-Color y = const Color.fromARGB(255, 140, 83, 253);
+Color ly = const Color.fromARGB(255, 135, 156, 241);
+//Color ly = const Color.fromARGB(255, 57, 213, 116);
+//Color ly = const Color.fromARGB(255, 140, 83, 253);
+Color y = const Color.fromARGB(255, 135, 156, 241);
+//Color y = const Color.fromARGB(255, 140, 83, 253);
 Color b = Colors.black;
 Color wh = Colors.white;
 String font = 'Montserrat';
 
-Widget appbared(title, context) => Container(
+Widget appbared(title, context, c) => Container(
       padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
       height: 100,
-      color: Colors.transparent,
-      // decoration: BoxDecoration(
-      //     boxShadow: [
-      //       BoxShadow(color: b, blurRadius: 10.0, offset: Offset(0.0, 0.75))
-      //     ],
-      //     gradient: LinearGradient(
-      //       colors: [
-      //         Color.fromRGBO(140, 83, 253, 0.31),
-      //         Color.fromRGBO(140, 83, 253, 0)
-      //       ],
-      //       begin: Alignment.topLeft,
-      //       end: Alignment.bottomRight,
-      //     )),
+      color: c,
       child: Center(
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -50,7 +42,6 @@ Widget appbared(title, context) => Container(
                     )),
               ),
             ),
-            Expanded(flex: 1, child: Container()),
             Text(
               title,
               style: const TextStyle(
@@ -59,7 +50,9 @@ Widget appbared(title, context) => Container(
                 color: Colors.white,
               ),
             ),
-            Expanded(flex: 2, child: Container())
+            SizedBox(
+              width: 40,
+            )
           ],
         ),
       ),
