@@ -31,13 +31,13 @@ class _CertificateState extends State<Certificate> {
   List d1 = ["Google", "Microsoft"];
   List d2 = ["Harvard university"];
 
-  addfire(t, t2) async {
+  addfire(t, t2, u) async {
     await FirebaseFirestore.instance
         .collection('user')
         .doc(user.toString())
         .collection('fav')
         .doc(t)
-        .set({"title": t, 'under': 'certificate', 'by': t2});
+        .set({"title": t, 'under': 'certificate', 'by': t2, 'url': u});
   }
 
   delfire(t) async {
@@ -148,7 +148,7 @@ class _CertificateState extends State<Certificate> {
                                     getfire();
                                     setState(() {});
                                   } else {
-                                    addfire(x['title'], x['by']);
+                                    addfire(x['title'], x['by'], x['url']);
                                     getfire();
                                   }
                                 } else {
@@ -274,7 +274,7 @@ class _CertificateState extends State<Certificate> {
                                   getfire();
                                   setState(() {});
                                 } else {
-                                  addfire(x['title'], x['by']);
+                                  addfire(x['title'], x['by'], x['url']);
                                   getfire();
                                 }
                               },

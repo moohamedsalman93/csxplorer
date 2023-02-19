@@ -1,15 +1,15 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csexp/const/auth.dart';
 import 'package:csexp/const/const.dart';
-import 'package:csexp/const/shimmer.dart';
 import 'package:csexp/screen/body/course.dart';
-import 'package:csexp/screen/nav/Pscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
+import 'package:animations/animations.dart';
 import '../body/Roadmap.dart';
 import '../body/ceritificate.dart';
 import '../body/job.dart';
@@ -31,109 +31,94 @@ class _HscreenState extends State<Hscreen> {
     "Roadmap",
   ];
   final List<Widget> car = [
-    CachedNetworkImage(
-      imageUrl:
-          "https://www.classcentral.com/report/wp-content/uploads/2021/12/free-certificates-banner.png",
-      imageBuilder: (context, imageProvider) => Container(
-          padding: const EdgeInsets.all(20),
-          width: 600,
-          decoration: BoxDecoration(
-            color: b,
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: Container()),
-              Text(
-                "Free Certificate",
-                style: TextStyle(
-                    color: b,
-                    fontSize: 20,
-                    shadows: [
-                      Shadow(
-                        color: Colors.grey,
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 4.0,
-                      )
-                    ],
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "From leading universities",
-                style: TextStyle(
-                    color: wh,
-                    shadows: [
-                      Shadow(
-                        color: b,
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 4.0,
-                      )
-                    ],
-                    fontWeight: FontWeight.w400),
-              ),
-            ],
-          )),
-      placeholder: (context, url) => Center(
-        child: CircularProgressIndicator(
-          color: ly,
+    Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.transparent, Color.fromARGB(255, 232, 0, 0)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
       ),
-      errorWidget: (context, url, error) => Lottie.asset(
-        'assets/noimg.json',
+      child: CachedNetworkImage(
+        imageUrl:
+            "https://www.classcentral.com/report/wp-content/uploads/2021/12/free-certificates-banner.png",
+        imageBuilder: (context, imageProvider) => Stack(
+          children: [
+            Container(
+              width: 600,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Colors.transparent, Colors.black],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.transparent, Colors.black],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+              ),
+              width: 600,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: Container()),
+                  const Text(
+                    "Free Certificate",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      shadows: [
+                        Shadow(
+                          color: Colors.grey,
+                          offset: Offset(2.0, 2.0),
+                          blurRadius: 4.0,
+                        )
+                      ],
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "From leading universities",
+                    style: TextStyle(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: b,
+                          offset: const Offset(2.0, 2.0),
+                          blurRadius: 4.0,
+                        )
+                      ],
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        placeholder: (context, url) => Center(
+          child: CircularProgressIndicator(
+            color: ly,
+          ),
+        ),
+        errorWidget: (context, url, error) => Lottie.asset(
+          'assets/noimg.json',
+        ),
       ),
     ),
     CachedNetworkImage(
       imageUrl:
           "https://imgs.search.brave.com/djiHowax6UhP4qzVhB8fUGXclVwHalUz76EYoQQZK-A/rs:fit:1024:512:1/g:ce/aHR0cHM6Ly9kMzFk/bjduZnB1d2pubS5j/bG91ZGZyb250Lm5l/dC9pbWFnZXMvdmFs/b3JhY2lvbmVzLzAw/MzIvMzM3MS9GQUFO/Ry5wbmc_MTU0MjYz/NzUxMA",
-      imageBuilder: (context, imageProvider) => Container(
-          padding: const EdgeInsets.all(20),
-          width: 600,
-          decoration: BoxDecoration(
-            color: b,
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: Container()),
-              Text(
-                "JOB Alert",
-                style: TextStyle(
-                    color: b,
-                    fontSize: 20,
-                    shadows: [
-                      Shadow(
-                        color: Colors.grey,
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 4.0,
-                      )
-                    ],
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "From top MNC",
-                style: TextStyle(
-                    color: b,
-                    shadows: [
-                      Shadow(
-                        color: Colors.grey,
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 4.0,
-                      )
-                    ],
-                    fontWeight: FontWeight.w400),
-              ),
-            ],
-          )),
       placeholder: (context, url) => Center(
         child: CircularProgressIndicator(
           color: ly,
@@ -144,6 +129,7 @@ class _HscreenState extends State<Hscreen> {
       ),
     ),
     CachedNetworkImage(
+      colorBlendMode: BlendMode.color,
       imageUrl: "https://wallpapercave.com/dwp2x/wp7692192.jpg",
       imageBuilder: (context, imageProvider) => Container(
           padding: const EdgeInsets.all(20),
@@ -168,7 +154,7 @@ class _HscreenState extends State<Hscreen> {
                     shadows: [
                       Shadow(
                         color: b,
-                        offset: Offset(2.0, 2.0),
+                        offset: const Offset(2.0, 2.0),
                         blurRadius: 5.0,
                       )
                     ],
@@ -181,7 +167,7 @@ class _HscreenState extends State<Hscreen> {
                     shadows: [
                       Shadow(
                         color: b,
-                        offset: Offset(2.0, 2.0),
+                        offset: const Offset(2.0, 2.0),
                         blurRadius: 1.0,
                       )
                     ],
@@ -204,48 +190,39 @@ class _HscreenState extends State<Hscreen> {
       imageUrl:
           "https://www.classcentral.com/report/wp-content/uploads/2021/12/free-certificates-banner.png",
       imageBuilder: (context, imageProvider) => Container(
-          padding: const EdgeInsets.all(20),
           width: 600,
           decoration: BoxDecoration(
-            color: b,
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
               image: imageProvider,
               fit: BoxFit.fill,
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: Container()),
-              Text(
-                "Free Certificate",
-                style: TextStyle(
-                    color: b,
-                    fontSize: 20,
-                    shadows: [
-                      Shadow(
-                        color: Colors.grey,
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 4.0,
-                      )
-                    ],
-                    fontWeight: FontWeight.bold),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                colors: [Colors.transparent, ly],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-              Text(
-                "From leading universities",
-                style: TextStyle(
-                    color: wh,
-                    shadows: [
-                      Shadow(
-                        color: b,
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 4.0,
-                      )
-                    ],
-                    fontWeight: FontWeight.w400),
-              ),
-            ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: Container()),
+                Text(
+                  "Free Certificate",
+                  style: TextStyle(
+                      color: wh, fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "From leading universities",
+                  style: TextStyle(color: wh, fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
           )),
       placeholder: (context, url) => Center(
         child: CircularProgressIndicator(
@@ -260,48 +237,39 @@ class _HscreenState extends State<Hscreen> {
       imageUrl:
           "https://imgs.search.brave.com/djiHowax6UhP4qzVhB8fUGXclVwHalUz76EYoQQZK-A/rs:fit:1024:512:1/g:ce/aHR0cHM6Ly9kMzFk/bjduZnB1d2pubS5j/bG91ZGZyb250Lm5l/dC9pbWFnZXMvdmFs/b3JhY2lvbmVzLzAw/MzIvMzM3MS9GQUFO/Ry5wbmc_MTU0MjYz/NzUxMA",
       imageBuilder: (context, imageProvider) => Container(
-          padding: const EdgeInsets.all(20),
           width: 600,
           decoration: BoxDecoration(
-            color: b,
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
               image: imageProvider,
               fit: BoxFit.fill,
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: Container()),
-              Text(
-                "JOB Alert",
-                style: TextStyle(
-                    color: b,
-                    fontSize: 20,
-                    shadows: [
-                      Shadow(
-                        color: Colors.grey,
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 4.0,
-                      )
-                    ],
-                    fontWeight: FontWeight.bold),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                colors: [Colors.transparent, ly],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-              Text(
-                "From top MNC",
-                style: TextStyle(
-                    color: b,
-                    shadows: [
-                      Shadow(
-                        color: Colors.grey,
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 4.0,
-                      )
-                    ],
-                    fontWeight: FontWeight.w400),
-              ),
-            ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: Container()),
+                Text(
+                  "Job Alert",
+                  style: TextStyle(
+                      color: wh, fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "From top MNC",
+                  style: TextStyle(color: wh, fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
           )),
       placeholder: (context, url) => Center(
         child: CircularProgressIndicator(
@@ -315,48 +283,39 @@ class _HscreenState extends State<Hscreen> {
     CachedNetworkImage(
       imageUrl: "https://wallpapercave.com/dwp2x/wp7692192.jpg",
       imageBuilder: (context, imageProvider) => Container(
-          padding: const EdgeInsets.all(20),
           width: 600,
           decoration: BoxDecoration(
-            color: b,
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
               image: imageProvider,
               fit: BoxFit.fill,
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: Container()),
-              Text(
-                "Progamming",
-                style: TextStyle(
-                    color: wh,
-                    fontSize: 20,
-                    shadows: [
-                      Shadow(
-                        color: b,
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 5.0,
-                      )
-                    ],
-                    fontWeight: FontWeight.bold),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                colors: [Colors.transparent, ly],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-              Text(
-                "From top Youtubers",
-                style: TextStyle(
-                    color: wh,
-                    shadows: [
-                      Shadow(
-                        color: b,
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 1.0,
-                      )
-                    ],
-                    fontWeight: FontWeight.w400),
-              ),
-            ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: Container()),
+                Text(
+                  "Progamming",
+                  style: TextStyle(
+                      color: wh, fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "From top Youtubers",
+                  style: TextStyle(color: wh, fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
           )),
       placeholder: (context, url) => Center(
         child: CircularProgressIndicator(
@@ -433,55 +392,36 @@ class _HscreenState extends State<Hscreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
-        child: Column(children: [
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(
-            height: 120,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Center(
-                    child: Container(
-                      height: 50,
-                      width: 50,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: wh),
-                        borderRadius: BorderRadiusDirectional.circular(30),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/favicon.png'),
-                          fit: BoxFit.fitWidth,
-                        ),
-                      ),
-                    ),
+            height: 40,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: SizedBox(
+              height: 70,
+              child: Wrap(
+                children: [
+                  Text(
+                    "CS",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: ly,
+                        fontFamily: 'Montserrat',
+                        fontSize: 30),
                   ),
-                ),
-                Expanded(
-                    flex: 3,
-                    child: Wrap(
-                      children: [
-                        Text(
-                          "CS",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: ly,
-                              fontFamily: 'Montserrat',
-                              fontSize: 30),
-                        ),
-                        Text(
-                          "exp",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: wh,
-                              fontFamily: 'Montserrat',
-                              fontSize: 28),
-                        ),
-                      ],
-                    )),
-                Expanded(flex: 1, child: Container())
-              ],
+                  Text(
+                    "explorer",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: wh,
+                        fontFamily: 'Montserrat',
+                        fontSize: 28),
+                  ),
+                ],
+              ),
             ),
           ),
           CarouselSlider(
@@ -510,35 +450,41 @@ class _HscreenState extends State<Hscreen> {
                 itemCount: items.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (ctx, index) {
-                  return Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => title[index]));
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          margin: const EdgeInsets.all(5),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          height: 40,
-                          decoration: BoxDecoration(
-                              color: wh.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                  color: wh.withOpacity(0.3), width: 0.8)),
-                          child: Center(
-                            child: Text(
-                              items[index],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, color: wh),
+                  return OpenContainer(
+                      transitionDuration: const Duration(milliseconds: 400),
+                      openColor: ly,
+                      closedColor: Colors.transparent,
+                      middleColor: ly,
+                      closedShape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      openShape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      openBuilder: (context, _) => title[index],
+                      closedBuilder: (context, VoidCallback openContainer) =>
+                          GestureDetector(
+                            onTap: () {
+                              openContainer();
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              margin: const EdgeInsets.all(5),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  color: wh.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                      color: wh.withOpacity(0.3), width: 0.8)),
+                              child: Center(
+                                child: Text(
+                                  items[index],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500, color: wh),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
+                          ));
                 }),
           ),
 
@@ -565,39 +511,50 @@ class _HscreenState extends State<Hscreen> {
     );
   }
 
-  Widget head(t, t2) => Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Colors.transparent),
-      child: Material(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.transparent,
-          child: InkWell(
-              borderRadius: BorderRadius.circular(10),
-              splashColor: ly,
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => course(
-                          title: t2,
-                          text: t,
-                        )));
-              },
-              child: Ink(
-                  height: 50,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        t,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: 18,
-                        color: ly,
-                      )
-                    ],
-                  )))));
+  Widget head(t, t2) => OpenContainer(
+        transitionDuration: const Duration(milliseconds: 400),
+        openColor: ly,
+        closedColor: Colors.transparent,
+        middleColor: ly,
+        closedShape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        openShape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        openBuilder: (context, _) => course(
+          title: t2,
+          text: t,
+        ),
+        closedBuilder: (context, VoidCallback openContainer) => Container(
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.transparent),
+            child: Material(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.transparent,
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    splashColor: ly,
+                    onTap: () {
+                      openContainer();
+                    },
+                    child: Ink(
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              t,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 18),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 18,
+                              color: ly,
+                            )
+                          ],
+                        ))))),
+      );
 }

@@ -93,24 +93,49 @@ class _PscreenState extends State<Pscreen> {
                             fontFamily: 'Montserrat',
                             fontSize: 20)),
                 DropdownButton<String>(
+                  borderRadius: BorderRadius.circular(10),
+                  dropdownColor: b,
+                  focusColor: ly,
                   items: [
                     DropdownMenuItem(
                       value: 'student',
-                      child: Text("Student",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: ly,
-                              fontFamily: 'Montserrat',
-                              fontSize: 20)),
+                      child: Row(
+                        children: [
+                          Text("Student",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: ly,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 20)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.book,
+                            color: ly,
+                          )
+                        ],
+                      ),
                     ),
                     DropdownMenuItem(
                       value: 'professional',
-                      child: Text("Professional",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: ly,
-                              fontFamily: 'Montserrat',
-                              fontSize: 20)),
+                      child: Row(
+                        children: [
+                          Text("Professional",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: ly,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 20)),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.computer_rounded,
+                            color: ly,
+                          )
+                        ],
+                      ),
                     ),
                   ],
                   onChanged: (value) {
@@ -213,7 +238,9 @@ class _PscreenState extends State<Pscreen> {
               borderRadius: BorderRadius.circular(10),
               splashColor: ly,
               onTap: () {
-                Share.share('This is an example of sharing text');
+                Share.share(
+                    'https://play.google.com/store/apps/details?id=com.lastbenchers.csexplorer',
+                    subject: "CSexplorer");
               },
               child: Ink(
                   height: 50,

@@ -4,10 +4,13 @@ import 'package:csexp/const/const.dart';
 import 'package:csexp/const/shimmer.dart';
 import 'package:csexp/screen/body/youtube.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:ui';
+import 'package:animations/animations.dart';
 
 class course extends StatefulWidget {
   var title;
@@ -24,6 +27,8 @@ class _courseState extends State<course> {
   final user = FirebaseAuth.instance.currentUser!.uid;
   final _isAnonymous = FirebaseAuth.instance.currentUser!.isAnonymous;
   List temp = [];
+  InterstitialAd? _interstitialAd;
+  int _numInterstitialLoadAttempts = 0;
 
   @override
   void initState() {
@@ -31,6 +36,11 @@ class _courseState extends State<course> {
     if (!_isAnonymous) {
       getfire();
     }
+    _createInterstitialAd();
+    Future.delayed(const Duration(seconds: 2), () {
+      _showInterstitialAd();
+    });
+
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.offset >= 50) {
@@ -55,6 +65,61 @@ class _courseState extends State<course> {
       temp = sa.docs.map((e) => e.data()['title']).toList();
     });
     print(temp);
+  }
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: 'ca-app-pub-3806793165121775/7730186409',
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            if (kDebugMode) {
+              print('$ad loaded');
+            }
+            _interstitialAd = ad;
+            _numInterstitialLoadAttempts = 0;
+            _interstitialAd!.setImmersiveMode(true);
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            if (kDebugMode) {
+              print('InterstitialAd failed to load: $error.');
+            }
+            _numInterstitialLoadAttempts += 1;
+            _interstitialAd = null;
+            if (_numInterstitialLoadAttempts < 10) {
+              _createInterstitialAd();
+            }
+          },
+        ));
+  }
+
+  void _showInterstitialAd() {
+    if (_interstitialAd == null) {
+      if (kDebugMode) {
+        print('Warning: attempt to show interstitial before loaded.');
+      }
+      return;
+    }
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        if (kDebugMode) {
+          print('$ad onAdDismissedFullScreenContent.');
+        }
+        ad.dispose();
+        _createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        if (kDebugMode) {
+          print('$ad onAdFailedToShowFullScreenContent: $error');
+        }
+        ad.dispose();
+        _createInterstitialAd();
+      },
+    );
+    _interstitialAd!.show();
+    _interstitialAd = null;
   }
 
   @override
@@ -119,7 +184,7 @@ class _courseState extends State<course> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        SizedBox(height: 120),
+                                        const SizedBox(height: 120),
                                         GridView.builder(
                                             padding: const EdgeInsets.all(10),
                                             gridDelegate:
@@ -137,103 +202,125 @@ class _courseState extends State<course> {
                                             itemBuilder: (context, i) {
                                               QueryDocumentSnapshot x =
                                                   snapshot.data.docs[i];
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                  color: wh.withOpacity(0.1),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.25),
-                                                      blurRadius: 4,
-                                                      offset:
-                                                          const Offset(0, 0),
-                                                    )
-                                                  ],
-                                                ),
-                                                child: Material(
-                                                  color: Colors.transparent,
-                                                  child: InkWell(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      splashColor:
-                                                          y.withOpacity(0.5),
-                                                      onTap: () {
-                                                        Navigator.of(context).push(
-                                                            MaterialPageRoute(
-                                                                builder: (context) => youtube(
-                                                                    title: x[
-                                                                        'title'],
-                                                                    simg: x[
-                                                                        "img"],
-                                                                    temp:
-                                                                        temp)));
-                                                      },
-                                                      child: Ink(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(5),
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceAround,
-                                                          children: [
-                                                            CachedNetworkImage(
-                                                              imageUrl:
-                                                                  x["img"],
-                                                              imageBuilder:
-                                                                  (context,
-                                                                          imageProvider) =>
-                                                                      Container(
-                                                                width: 80,
-                                                                height: 80,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  image:
-                                                                      DecorationImage(
-                                                                    image:
-                                                                        imageProvider,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              placeholder:
-                                                                  (context,
-                                                                          url) =>
-                                                                      mainimg(
-                                                                          100.0,
-                                                                          100.0),
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  Lottie.asset(
-                                                                'assets/noimg.json',
-                                                                width: 100,
-                                                                height: 100,
-                                                              ),
+                                              return OpenContainer(
+                                                  transitionDuration:
+                                                      const Duration(
+                                                          milliseconds: 400),
+                                                  openColor: ly,
+                                                  closedColor:
+                                                      Colors.transparent,
+                                                  middleColor: ly,
+                                                  closedShape:
+                                                      const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20))),
+                                                  openShape: const RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.all(
+                                                          Radius.circular(20))),
+                                                  openBuilder: (context, _) =>
+                                                      youtube(
+                                                          title: x['title'],
+                                                          simg: x["img"],
+                                                          temp: temp),
+                                                  closedBuilder:
+                                                      (context,
+                                                              VoidCallback
+                                                                  openContainer) =>
+                                                          Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: wh
+                                                                  .withOpacity(
+                                                                      0.1),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.25),
+                                                                  blurRadius: 4,
+                                                                  offset:
+                                                                      const Offset(
+                                                                          0, 0),
+                                                                )
+                                                              ],
                                                             ),
-                                                            Center(
-                                                              child: Text(
-                                                                  x['title'],
-                                                                  softWrap:
-                                                                      false,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .fade,
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    fontSize:
-                                                                        18,
-                                                                    color: Colors
-                                                                        .white,
+                                                            child: Material(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: InkWell(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15),
+                                                                  splashColor: y
+                                                                      .withOpacity(
+                                                                          0.5),
+                                                                  onTap: () {
+                                                                    openContainer();
+                                                                  },
+                                                                  child: Ink(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(5),
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceAround,
+                                                                      children: [
+                                                                        CachedNetworkImage(
+                                                                          color:
+                                                                              ly,
+                                                                          imageUrl:
+                                                                              x["img"],
+                                                                          imageBuilder: (context, imageProvider) =>
+                                                                              Container(
+                                                                            width:
+                                                                                80,
+                                                                            height:
+                                                                                80,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              image: DecorationImage(
+                                                                                image: imageProvider,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          placeholder: (context, url) => mainimg(
+                                                                              100.0,
+                                                                              100.0),
+                                                                          errorWidget: (context, url, error) =>
+                                                                              Lottie.asset(
+                                                                            'assets/noimg.json',
+                                                                            width:
+                                                                                100,
+                                                                            height:
+                                                                                100,
+                                                                          ),
+                                                                        ),
+                                                                        Center(
+                                                                          child: Text(
+                                                                              x['title'],
+                                                                              softWrap: false,
+                                                                              overflow: TextOverflow.fade,
+                                                                              style: const TextStyle(
+                                                                                fontSize: 18,
+                                                                                color: Colors.white,
+                                                                              )),
+                                                                        ),
+                                                                      ],
+                                                                    ),
                                                                   )),
                                                             ),
-                                                          ],
-                                                        ),
-                                                      )),
-                                                ),
-                                              );
+                                                          ));
                                             })
                                       ]);
                                 }

@@ -4,10 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:csexp/const/auth.dart';
 import 'package:csexp/const/const.dart';
-import 'package:csexp/screen/home.dart';
 import 'package:flutter/material.dart';
-import 'package:pixel_perfect/pixel_perfect.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:lottie/lottie.dart';
 
 class LogiN extends StatefulWidget {
   const LogiN({super.key});
@@ -18,11 +16,10 @@ class LogiN extends StatefulWidget {
 
 class _LogiNState extends State<LogiN> {
   bool _isVisible = false;
-  bool _isRem = false;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final email = TextEditingController();
   final pass = TextEditingController();
   Auth a = Auth();
+  bool hasInternet = true;
 
   void updateStatus() {
     setState(() {
@@ -41,31 +38,39 @@ class _LogiNState extends State<LogiN> {
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: b,
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/bgggg.png'),
-            fit: BoxFit.fill,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: b,
+        body: Container(
+          decoration: BoxDecoration(
+            color: b,
+            image: const DecorationImage(
+              image: AssetImage('assets/bgggg.png'),
+              fit: BoxFit.fill,
+            ),
           ),
-        ),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: 15,
-            sigmaY: 15,
-          ),
-          child: Container(
-            height: h,
-            width: w,
-            color: b.withOpacity(0.6),
-            child: SingleChildScrollView(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 15,
+              sigmaY: 15,
+            ),
+            child: Container(
+              height: h,
+              width: w,
+              color: b.withOpacity(0.6),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 80,
+                  const SizedBox(
+                    height: 40,
                   ),
                   //skip
                   Padding(
@@ -75,7 +80,18 @@ class _LogiNState extends State<LogiN> {
                         Expanded(child: Container()),
                         GestureDetector(
                           onTap: () async {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => Center(
+                                      child: Lottie.asset(
+                                        'assets/loading.json',
+                                        width: 300,
+                                        height: 300,
+                                      ),
+                                    ));
                             await FirebaseAuth.instance.signInAnonymously();
+                            Navigator.of(context).pop();
                           },
                           child: Wrap(
                             children: [
@@ -94,251 +110,253 @@ class _LogiNState extends State<LogiN> {
                     ),
                   ),
                   SizedBox(
-                    height: 40,
-                  ),
-                  SizedBox(
-                    height: 83,
-                    width: 187,
-                    //color: b,
-                    child: Image.asset(
-                      'assets/logo.png',
-                      height: 150,
-                      scale: 4,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Text(
-                      "this app is developed for the learn and gain knowlage and which can able to find everything here  ",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: wh.withOpacity(0.7),
-                          fontFamily: 'Montserrat',
-                          fontSize: 12),
-                    ),
-                  ),
-                  //email
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20),
-                    height: 51,
-                    width: 292,
-                    child: TextField(
-                      controller: email,
-                      style: TextStyle(
-                          fontFamily: font,
-                          color: wh.withOpacity(0.7),
-                          fontSize: 15),
-                      decoration: InputDecoration(
-                          labelStyle: TextStyle(color: wh.withOpacity(0.7)),
-                          labelText: 'Email :',
-                          focusColor: wh,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                              color: wh,
+                    width: w,
+                    height: h - 70,
+                    child: Column(
+                      children: [
+                        const Expanded(flex: 2, child: SizedBox()),
+                        SizedBox(
+                          height: 83,
+                          width: 187,
+                          child: Column(
+                            children: [
+                              Text(
+                                "CS",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: ly,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 30),
+                              ),
+                              Text(
+                                "explorer",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: wh,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 28),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Expanded(flex: 1, child: SizedBox()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: Text(
+                            "Learn to Code Free for Everyone",
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: wh.withOpacity(0.7),
+                                fontFamily: 'Montserrat',
+                                fontSize: 12),
+                          ),
+                        ),
+                        const Expanded(flex: 1, child: SizedBox()),
+                        //email
+                        SizedBox(
+                          height: 51,
+                          width: 292,
+                          child: TextField(
+                            cursorColor: wh,
+                            controller: email,
+                            style: TextStyle(
+                                fontFamily: font,
+                                fontWeight: FontWeight.w700,
+                                color: wh.withOpacity(0.7),
+                                fontSize: 15),
+                            decoration: InputDecoration(
+                                labelStyle:
+                                    TextStyle(color: wh.withOpacity(0.7)),
+                                labelText: 'Email ',
+                                focusColor: wh,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                    color: wh,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                    color: wh,
+                                  ),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                    color: wh,
+                                  ),
+                                )),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        //pass
+                        SizedBox(
+                          height: 51,
+                          width: 292,
+                          child: TextField(
+                            cursorColor: wh,
+                            controller: pass,
+                            style: TextStyle(
+                                color: wh.withOpacity(0.7),
+                                fontSize: 15,
+                                fontFamily: font,
+                                fontWeight: FontWeight.w700),
+                            obscureText: _isVisible ? false : true,
+                            decoration: InputDecoration(
+                                helperStyle:
+                                    TextStyle(color: wh.withOpacity(0.7)),
+                                labelStyle:
+                                    TextStyle(color: wh.withOpacity(0.7)),
+                                labelText: 'Password ',
+                                hintStyle:
+                                    TextStyle(color: wh.withOpacity(0.7)),
+                                focusColor: wh,
+                                suffixIcon: IconButton(
+                                    onPressed: () => updateStatus(),
+                                    icon: Icon(
+                                        color: y,
+                                        _isVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off)),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                    color: wh,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                    color: wh,
+                                  ),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  borderSide: BorderSide(
+                                    color: wh,
+                                  ),
+                                )),
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 15,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => Center(
+                                      child: Lottie.asset(
+                                        'assets/loading.json',
+                                        width: 300,
+                                        height: 300,
+                                      ),
+                                    ));
+                            if (email.text == '') {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Enter email first"),
+                                ),
+                              );
+                              Navigator.of(context).pop();
+                            } else {
+                              await a.sendPasswordResetEmail(
+                                  email: email.text, context: context);
+                            }
+                          },
+                          child: SizedBox(
+                            width: 292,
+                            child: GestureDetector(
+                              child: Text(
+                                "Recovery password?",
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                    color: wh.withOpacity(0.7),
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 12),
+                              ),
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                              color: wh,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                              color: wh,
-                            ),
-                          )),
+                        ),
+                        const Expanded(flex: 1, child: SizedBox()),
+                        //login
+                        Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: y),
+                            child: Material(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.transparent,
+                                child: InkWell(
+                                    borderRadius: BorderRadius.circular(10),
+                                    splashColor: b,
+                                    onTap: () async {
+                                      showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (context) => Center(
+                                                child: Lottie.asset(
+                                                  'assets/loading.json',
+                                                  width: 300,
+                                                  height: 300,
+                                                ),
+                                              ));
+                                      if (email.text == '' && pass.text == '') {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                "enter email and password properly"),
+                                          ),
+                                        );
+                                        Navigator.of(context).pop();
+                                      } else {
+                                        await a.signin(
+                                            e: email.text,
+                                            p: pass.text,
+                                            context: context);
+                                      }
+                                    },
+                                    child: Ink(
+                                        height: 38,
+                                        width: 176,
+                                        child: const Center(
+                                            child: Text(
+                                          "Login",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18),
+                                        )))))),
+                        const Expanded(flex: 1, child: SizedBox()),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const Signup()));
+                          },
+                          child: Text("Create new account !",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: ly,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 15)),
+                        ),
+                        const Expanded(flex: 5, child: SizedBox()),
+                      ],
                     ),
-                  ),
-                  //pass
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    height: 51,
-                    width: 292,
-                    child: TextField(
-                      controller: pass,
-                      style: TextStyle(
-                          color: wh.withOpacity(0.7),
-                          fontSize: 15,
-                          fontFamily: font),
-                      obscureText: _isVisible ? false : true,
-                      decoration: InputDecoration(
-                          helperStyle: TextStyle(color: wh.withOpacity(0.7)),
-                          labelStyle: TextStyle(color: wh.withOpacity(0.7)),
-                          labelText: 'Password :',
-                          hintStyle: TextStyle(color: wh.withOpacity(0.7)),
-                          focusColor: wh,
-                          suffixIcon: IconButton(
-                              onPressed: () => updateStatus(),
-                              icon: Icon(
-                                  color: y,
-                                  _isVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off)),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                              color: wh,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                              color: wh,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            borderSide: BorderSide(
-                              color: wh,
-                            ),
-                          )),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 292,
-                    child: GestureDetector(
-                      child: Text(
-                        "Recovery password?",
-                        textAlign: TextAlign.end,
-                        style: TextStyle(
-                            color: wh.withOpacity(0.7),
-                            fontFamily: 'Montserrat',
-                            fontSize: 12),
-                      ),
-                    ),
-                  ),
-                  //login
-                  Container(
-                      margin: EdgeInsets.only(top: 40, bottom: 20),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10), color: y),
-                      child: Material(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.transparent,
-                          child: InkWell(
-                              borderRadius: BorderRadius.circular(10),
-                              splashColor: b,
-                              onTap: () {
-                                a.signin(
-                                    e: email.text,
-                                    p: pass.text,
-                                    context: context);
-                              },
-                              child: Ink(
-                                  height: 38,
-                                  width: 176,
-                                  child: const Center(
-                                      child: Text(
-                                    "Login",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18),
-                                  )))))),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 30),
-                  //   child: Row(
-                  //     children: [
-                  //       Container(
-                  //         child: CustomPaint(
-                  //           size: const Size(98, 2),
-                  //           painter: CurvePainter(),
-                  //         ),
-                  //       ),
-                  //       Text(
-                  //         "Or Continue with",
-                  //         style: TextStyle(
-                  //             color: wh,
-                  //             fontFamily: font,
-                  //             fontSize: 12,
-                  //             fontWeight: FontWeight.w400),
-                  //       ),
-                  //       Container(
-                  //         child: CustomPaint(
-                  //           size: const Size(98, 2),
-                  //           painter: CurvePainter(),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Row(
-                  //   children: [
-                  //     const Expanded(flex: 2, child: SizedBox()),
-                  //     Container(
-                  //         height: 40,
-                  //         width: 40,
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: BorderRadius.circular(30),
-                  //         ),
-                  //         child: Material(
-                  //             borderRadius: BorderRadius.circular(30),
-                  //             color: Colors.transparent,
-                  //             child: InkWell(
-                  //               borderRadius: BorderRadius.circular(30),
-                  //               splashColor: y,
-                  //               onTap: () {
-                  //                 a.signInWithGoogte();
-                  //               },
-                  //               child: Image.asset(
-                  //                 'assets/g.png',
-                  //                 height: 40,
-                  //                 scale: 4,
-                  //               ),
-                  //             ))),
-                  //     const Expanded(flex: 1, child: SizedBox()),
-                  //     Text(
-                  //       "OR",
-                  //       style: TextStyle(
-                  //           color: wh,
-                  //           fontFamily: font,
-                  //           fontSize: 12,
-                  //           fontWeight: FontWeight.w400),
-                  //     ),
-                  //     const Expanded(flex: 1, child: SizedBox()),
-                  //     Container(
-                  //         height: 40,
-                  //         width: 40,
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: BorderRadius.circular(30),
-                  //         ),
-                  //         child: Material(
-                  //             borderRadius: BorderRadius.circular(30),
-                  //             color: Colors.transparent,
-                  //             child: InkWell(
-                  //               borderRadius: BorderRadius.circular(30),
-                  //               splashColor: y,
-                  //               onTap: () async {
-                  //                 Navigator.of(context).push(MaterialPageRoute(
-                  //                     builder: (context) => const Home()));
-                  //               },
-                  //               child: Image.asset(
-                  //                 'assets/f.png',
-                  //                 height: 40,
-                  //                 scale: 4,
-                  //               ),
-                  //             ))),
-                  //     const Expanded(flex: 2, child: SizedBox()),
-                  //   ],
-                  // ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const Signup()));
-                    },
-                    child: Text("Create new account !",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: ly,
-                            fontFamily: 'Montserrat',
-                            fontSize: 15)),
                   ),
                 ],
               ),
@@ -349,25 +367,3 @@ class _LogiNState extends State<LogiN> {
     );
   }
 }
-
-// class CurvePainter extends CustomPainter {
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     var paint = Paint();
-//     paint.color = wh;
-//     paint.style = PaintingStyle.fill; // Change this to fill
-
-//     var path = Path();
-
-//     path.moveTo(0, 0);
-//     path.quadraticBezierTo(size.width / 2, size.height / 2, size.width, 0);
-//     path.quadraticBezierTo(size.width / 2, -size.height / 2, 0, 0);
-
-//     canvas.drawPath(path, paint);
-//   }
-
-//   @override
-//   bool shouldRepaint(CustomPainter oldDelegate) {
-//     return true;
-//   }
-// }

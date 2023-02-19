@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../const/shimmer.dart';
 
@@ -89,12 +90,17 @@ class _FscreenState extends State<Fscreen> {
               ),
             ),
             _isAnonymous
-                ? Center(
-                    child: Text(
-                      "Not Available on Anonymous user !",
-                      style: TextStyle(color: wh, fontSize: 18),
+                ? Column(children: [
+                    SizedBox(
+                      height: 200,
                     ),
-                  )
+                    Center(
+                      child: Text(
+                        "Not Available on Anonymous user !",
+                        style: TextStyle(color: wh, fontSize: 18),
+                      ),
+                    )
+                  ])
                 : Column(
                     children: [
                       _certi("certificate", isTab(context)),
@@ -146,96 +152,84 @@ class _FscreenState extends State<Fscreen> {
                             builder: (ctx, child) {
                               return child!;
                             },
-                            child: GestureDetector(
-                              onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                        "Hello you tapped at ${index + 1} "),
+                            child: Container(
+                              padding: const EdgeInsets.all(15),
+                              margin: const EdgeInsets.only(
+                                  right: 8, left: 8, top: 24, bottom: 12),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: wh.withOpacity(0.1),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  SizedBox(
+                                    width: 200,
+                                    child: Wrap(children: [
+                                      Text(x['title'],
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white,
+                                          )),
+                                    ]),
                                   ),
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(15),
-                                margin: const EdgeInsets.only(
-                                    right: 8, left: 8, top: 24, bottom: 12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: wh.withOpacity(0.1),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    SizedBox(
-                                      width: 200,
-                                      child: Wrap(children: [
-                                        Text(x['title'],
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white,
-                                            )),
-                                      ]),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(x['by'],
-                                        softWrap: false,
-                                        overflow: TextOverflow.clip,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: y,
-                                        )),
-                                    Expanded(child: Container()),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: y),
-                                            child: Material(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    splashColor: b,
-                                                    onTap: () {},
-                                                    child: Ink(
-                                                        height: 38,
-                                                        width: 120,
-                                                        child: const Center(
-                                                            child: Text(
-                                                          "Open",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 18),
-                                                        )))))),
-                                        IconButton(
-                                            onPressed: () {
-                                              t == 'youtube'
-                                                  ? delfire(x['title'], x['by'])
-                                                  : delfirec(x['title']);
-                                              getfire();
-                                              setState(() {});
-                                            },
-                                            icon: const Icon(
-                                              Icons.favorite,
-                                              color: Colors.red,
-                                            ))
-                                      ],
-                                    )
-                                  ],
-                                ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(x['by'],
+                                      softWrap: false,
+                                      overflow: TextOverflow.clip,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: y,
+                                      )),
+                                  Expanded(child: Container()),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: y),
+                                          child: Material(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  splashColor: b,
+                                                  onTap: () => _link(x['url']),
+                                                  child: Ink(
+                                                      height: 38,
+                                                      width: 120,
+                                                      child: const Center(
+                                                          child: Text(
+                                                        "Open",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 18),
+                                                      )))))),
+                                      IconButton(
+                                          onPressed: () {
+                                            t == 'youtube'
+                                                ? delfire(x['title'], x['by'])
+                                                : delfirec(x['title']);
+                                            getfire();
+                                            setState(() {});
+                                          },
+                                          icon: const Icon(
+                                            Icons.favorite,
+                                            color: Colors.red,
+                                          ))
+                                    ],
+                                  )
+                                ],
                               ),
                             ),
                           );
@@ -256,4 +250,17 @@ class _FscreenState extends State<Fscreen> {
           ),
         );
       });
+
+  _link(String url) async {
+    if (await canLaunch(url)) {
+      final bool nativeAppLaunchSucceeded = await launch(
+        url,
+        forceSafariVC: false,
+        universalLinksOnly: true,
+      );
+      if (!nativeAppLaunchSucceeded) {
+        await launch(url, forceSafariVC: true);
+      }
+    }
+  }
 }

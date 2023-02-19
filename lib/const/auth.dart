@@ -12,12 +12,6 @@ class Auth {
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
   Future<void> signin({required e, required p, required context}) async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(
-              child: CircularProgressIndicator(),
-            ));
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
         email: e,
@@ -30,13 +24,23 @@ class Auth {
           content: Text(e.toString()),
         ),
       );
+      Navigator.of(context).pop();
     }
   }
 
   Future<void> sendPasswordResetEmail({
-    required String email,
+    required String email,required context
   }) async {
-    await _firebaseAuth.sendPasswordResetEmail(email: email);
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+       ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+      Navigator.of(context).pop();
+    }
   }
 
   Future<void> createUserWithEmailAndPassword(

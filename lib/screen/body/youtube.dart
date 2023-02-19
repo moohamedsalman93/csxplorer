@@ -51,13 +51,13 @@ class _youtubeState extends State<youtube> {
     });
   }
 
-  addfire(t, t2) async {
+  addfire(t, t2,u) async {
     await FirebaseFirestore.instance
         .collection('user')
         .doc(user.toString())
         .collection('fav')
         .doc("$t$t2")
-        .set({"title": t, 'under': 'youtube', 'by': t2});
+        .set({"title": t, 'under': 'youtube', 'by': t2,'url':u});
   }
 
   delfire(t, t2) async {
@@ -336,7 +336,7 @@ class _youtubeState extends State<youtube> {
                                                                                       delfire(x['title'], x['topic']);
                                                                                       getfire();
                                                                                     } else {
-                                                                                      addfire(x['title'], x['topic']);
+                                                                                      addfire(x['title'], x['topic'],x['url']);
                                                                                       getfire();
                                                                                     }
                                                                                   } else {
